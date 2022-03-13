@@ -6,6 +6,7 @@ using EcommerceCRUD.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
 
 namespace EcommerceCRUD.Controllers
 {
@@ -39,6 +40,23 @@ namespace EcommerceCRUD.Controllers
         {
             _userService.Register(request);
             return Ok(new { message = "Registration successful" });
+
+        }
+
+        [AllowAnonymous]
+        [HttpPost("admin-register")]
+        public IActionResult AdminRegister(RegisterRequest request)
+        {
+            try
+            {
+                var response = _userService.AdminRegister(request);
+                return new ObjectResult(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            //return Ok(new { message = "Registration successful" });
 
         }
     }

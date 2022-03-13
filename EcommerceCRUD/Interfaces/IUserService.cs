@@ -1,4 +1,5 @@
-﻿using EcommerceCRUD.DTOs;
+﻿using boutique.DTOs;
+using EcommerceCRUD.DTOs;
 using EcommerceCRUD.Models;
 
 namespace EcommerceCRUD.Interfaces
@@ -7,6 +8,7 @@ namespace EcommerceCRUD.Interfaces
     {
         LoginResponse Login(LoginRequest request);
         void Register(RegisterRequest request);
+        RegisterResponse AdminRegister(RegisterRequest request);
         User GetById(int id);
     }
 }

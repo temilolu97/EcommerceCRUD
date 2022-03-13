@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BCrypt.Net;
+using boutique.DTOs;
 using EcommerceCRUD.Contexts;
 using EcommerceCRUD.DTOs;
 using EcommerceCRUD.Enums;
@@ -74,6 +75,28 @@ namespace EcommerceCRUD.Services
             var user = _databaseContext.Users.Find(id);
             if (user == null) throw new Exception("User not found");
             return user;
+        }
+
+        public RegisterResponse AdminRegister(RegisterRequest request)
+        {
+            try
+            {
+
+                var existingUser = _databaseContext.Users.SingleOrDefault(u => u.Email == request.Email);
+                if (existingUser != null) throw new Exception("Email " + request.Email + " is already taken");
+                var user = _mapper.Map<User>(request);
+
+                user.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
+                user.Role = (int)RolesEnum.Admin;
+                user.DateCreated = DateTime.UtcNow;
+                _databaseContext.Users.Add(user);
+                _databaseContext.SaveChanges();
+                return new RegisterResponse { Status = "successful", StatusCode = "00", Message = "Successfully created admin" };
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }
